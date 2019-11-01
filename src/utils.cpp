@@ -8,6 +8,7 @@
 
 #include "common.h"
 #include "Transition.h"
+#include "Game.h"
 #include "Graph.h"
 #include "utils.h"
 
@@ -100,3 +101,5 @@ Graph* readGraph(string filename){
 }
 
 
+Game* makeGame(Graph* gg){
+}

@@ -11,11 +11,14 @@
 
 #include "common.h"
 #include "Transition.h"
+#include "Game.h"
 #include "Graph.h"
 
 
 using namespace std;
 
 Graph* readGraph(string filename);
+
+Game* makeGame(Graph* gg);
 
 #endif
