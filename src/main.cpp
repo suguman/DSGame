@@ -16,7 +16,9 @@ int main(int argc, char** argv){
 
   Game* game = new Game();
 
-  game->printAll();
+  Game* game2 =  new Game(gamegraph, df, {});
+
+  game2->printAll();
   
   return 0;
 

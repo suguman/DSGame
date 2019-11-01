@@ -21,13 +21,16 @@ Game::Game(){
   this->reverseFunc = {};
 }
 
-/*
+
 Game::Game(Graph* gg, int df, vector<int> value){
 
   int wt = gg->getWt();
-  return new Game();
-  }
-*/
+  this->initial = "NADA";
+  this->winning = {};
+  this->stateToPlayer = {};
+  this->transFunc = {};
+  this->reverseFunc = {};
+}
 
 Game::~Game(){
   //TODO

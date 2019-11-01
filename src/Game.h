@@ -9,7 +9,7 @@
 #define GAME_H
 
 #include "common.h"
-//#include "Graph.h"
+#include "Graph.h"
 #include "Transition.h"
 
 using namespace std;
@@ -18,7 +18,7 @@ class Game{
 
  public:
   Game();
-  //Game(Graph* gg, int df, vector<int> value);
+  Game(Graph* gg, int df, vector<int> value);
   virtual ~Game();
 
   //Access functions
