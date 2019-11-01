@@ -1,4 +1,5 @@
 #include "common.h"
+#include "Game.h"
 #include "Graph.h"
 #include "Transition.h"
 #include "utils.h"
@@ -12,7 +13,11 @@ int main(int argc, char** argv){
 
   Graph* gamegraph = readGraph(filename);
   gamegraph->printAll();
- 
+
+  Game* game = new Game();
+
+  game->printAll();
+  
   return 0;
 
 }

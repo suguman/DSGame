@@ -13,14 +13,16 @@ using namespace std;
 Graph::Graph(){
   this->numState = 0;
   this->initState = 0;
+  this->maxWt = 0;
   this->stateToPlayer = {};
   this->transFunc = {};
 }
 
 
-Graph::Graph(int num, int initial, unordered_map<int, int>* stateToP, unordered_map<int, vector< Transition*>>* transMap){
+Graph::Graph(int num, int initial, int wt, unordered_map<int, int>* stateToP, unordered_map<int, vector< Transition*>>* transMap){
   this->numState = num;
   this->initState = initial;
+  this->maxWt = wt;
   this->stateToPlayer = *stateToP;
   this->transFunc = *transMap;  
 }
@@ -34,6 +36,10 @@ int Graph::getInitial(){
 
 int Graph::getStateNum(){
   return this->numState;
+}
+
+int Graph::getWt(){
+  return this->maxWt;
 }
 
 unordered_map<int, int>* Graph::getStateToPlayer(){
@@ -50,6 +56,10 @@ int Graph::getTransNum(){
 
 void Graph::printInitial(){
   cout << "Initial state: " << this->getInitial() << endl;
+}
+
+void Graph::printMaxWt(){
+  cout << "Max Wt: " << this->getWt() << endl;
 }
 
 void Graph::printStoPlayer(){
@@ -81,4 +91,5 @@ void Graph::printAll(){
   this->printInitial();
   this->printStoPlayer();
   this->printTrans();
+  this->printMaxWt();
 }

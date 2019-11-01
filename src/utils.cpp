@@ -7,8 +7,6 @@
 //============================================================================
 
 #include "common.h"
-#include "Transition.h"
-#include "Game.h"
 #include "Graph.h"
 #include "utils.h"
 
@@ -19,9 +17,9 @@ using namespace boost::algorithm;
 Graph* readGraph(string filename){
   //cout << filename << endl;
 
-  
   int numState = 0;
   int initState = 0;
+  int maxWt = 0;
   unordered_map<int, int> stateToP = {};
   unordered_map<int, vector<Transition*>> transFunc = {};
   
@@ -87,6 +85,9 @@ Graph* readGraph(string filename){
         Transition* tempTrans = new Transition(src, dest, wt);
 	//tempTrans->toString();
 	transFunc[src].push_back(tempTrans);
+	if (abs(wt)> maxWt){
+	  maxWt = wt;
+	  }
 	break;
 	
       }
@@ -95,11 +96,9 @@ Graph* readGraph(string filename){
 
   inFile.close();
   
-  Graph* gg = new Graph(numState, initState, &stateToP, &transFunc);
+  Graph* gg = new Graph(numState, initState, maxWt, &stateToP, &transFunc);
   return gg;
 
 }
 
 
-Game* makeGame(Graph* gg){
-}
