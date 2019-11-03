@@ -18,7 +18,7 @@ class Game{
 
  public:
   Game();
-  Game(Graph* gg, int df, vector<int> value);
+  Game(Graph* gg, int df, int value);
   virtual ~Game();
 
   //Access functions
