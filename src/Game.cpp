@@ -90,7 +90,7 @@ Game::Game(){
 
 Game::Game(Graph* gg, int df, int value){
 
-  // Initally winning states are set of \leq game (safety game)
+  // Initally winning states are set to the upperboundstates
   
   this->initial = "NA";
   this->winning = {};
@@ -138,7 +138,7 @@ Game::Game(Graph* gg, int df, int value){
   statestack.push(init);
   isstate[init] = true;
   statetoplayeraux[init] = statePlayerID->at(gg->getInitial());
-  winningaux[init] = 1;
+  winningaux[init] = 0;
   
   //Special state : Upperboundstateplayer0 (State exists since all upperboundstates for player 0 can be condensed to one)
   //Special state : Upperboundstateplayer1 (State exists since all upperboundstates for player 1 can be condensed to one)
@@ -162,10 +162,10 @@ Game::Game(Graph* gg, int df, int value){
   statetoplayeraux[lboundplayer0] = 0;
   statetoplayeraux[lboundplayer1] = 1;
 
-  winningaux[uboundplayer0] = 0;
-  winningaux[uboundplayer1] = 0;
-  winningaux[lboundplayer0] = 1;
-  winningaux[lboundplayer1] = 1;
+  winningaux[uboundplayer0] = 1;
+  winningaux[uboundplayer1] = 1;
+  winningaux[lboundplayer0] = 0;
+  winningaux[lboundplayer1] = 0;
   
   
   while(!statestack.empty()){
@@ -296,7 +296,7 @@ Game::Game(Graph* gg, int df, int value){
       catch(const std::out_of_range){
 	isstate[new_state] = true;
 	statetoplayeraux[new_state] = statePlayerID->at(next_src);
-	winningaux[new_state] = 1;
+	winningaux[new_state] = 0;
 	
 	cout << "Length of statestack before insertion is " << statestack.size() << endl;
 	statestack.push(new_state);
@@ -350,12 +350,16 @@ unordered_map<string, vector<string>>* Game::getTrans(){
   return &(this->transFunc);
 }
 
+unordered_map<string, vector<string>>* Game::getRevTrans(){
+  return &(this->reverseFunc);
+}
+
 void Game::printInitial(){
   cout << "Initial state is " << this->getInitial() << endl;
 }
 
 void Game::printWinning(){
-  cout << "Printing winning state (For \leq - safety game)" << endl;
+  cout << "Default: Printing the upper states" << endl;
   unordered_map<string, int>:: iterator p;
   unordered_map<string, int>* temp = this->getWinning(); 
   for (p = temp->begin(); p != temp->end(); p++){
@@ -395,3 +399,69 @@ void Game::printAll(){
   printTrans();
 }
 
+
+bool playgame(int relation){
+
+  //Env is player 0
+  //Sys is player 1
+  
+  if (realtion == "leq"){
+    //safety game with all but the upper states. Player 1 must win. 
+    //Equiv to opposite of:: reachability game with upper states as target. Player 0 must win.
+    return not(reachabilitygame(int relation, 0));
+  }
+  if (realtion == "lt"){
+    //reachability game with appropriate winning states.
+    //TODO:  change winning states
+    return true;
+  }
+}
+
+bool reachabilitygame(int relation, int player){
+
+  int opponent = 1-player;
+  
+  unordered_map<string, vector<string>> reverse_map = self->getRevTrans();
+  unordered_map<string, vector<string>> map = self->getTrans();
+  unordered_map<string, int> statetoplayer = self->getStateToPlayer();
+  unordered_map<string, int> winning = self->getWinning();
+  
+  string initial = self->getInitial();
+  
+  unordered_map<string, int> numtrans;
+  unordered_map<string, vector<string>> :: iterator p;
+  for(p = map->begin(); p != map->end(); p++){
+    numtrans[p->first] = (p->second).size();
+  }
+  
+  queue<string> statestack;
+  
+  //Special state : init
+  statestack.push("Upperboundstateplayer0");
+  statestack.push("Upperboundstateplayer1");
+
+  vector<string> revtranslist;
+  bool playerwins = false;
+  
+  while(!statestack.empty()){
+    string state = statestack.front();
+    statestack.pop();
+
+    revtranslist = reverse_map[state];
+    for(auto & element : revtranslist){
+      if (element == initial){
+	playerwins = true;
+	break;
+      }
+      if (element = 0){
+      }
+      if (element = 1){
+      }
+    }
+    if (playerwins == true){
+        return playerwins;
+      }
+    
+  }
+}
+  

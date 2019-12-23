@@ -21,12 +21,16 @@ class Game{
   Game(Graph* gg, int df, int value);
   virtual ~Game();
 
+  //playing game
+  bool playgame(int relation);
+  bool reachabilitygame(int relation, int player);
+  
   //Access functions
   string getInitial();
   unordered_map<string, int>* getWinning();
   unordered_map<string, int>* getStateToPlayer();
   unordered_map<string, vector<string>>* getTrans();
-
+  unordered_map<string, vector<string>>* getRevTrans();
   
   //Print functions
   void printInitial();
