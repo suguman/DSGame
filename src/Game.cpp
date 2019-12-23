@@ -392,6 +392,21 @@ void Game::printTrans(){
 }
 
 
+void Game::printRevTrans(){
+  cout << "Transition reverse relation is " << endl;
+
+  unordered_map<string, vector<string>> :: iterator p;
+  unordered_map<string, vector<string>>* temp = this->getRevTrans();
+  
+  for (p = temp->begin(); p != temp->end(); p++){
+    vector<string> temptranslist= p->second;
+    for (auto & element : temptranslist) {
+      cout << p->first << "-->" << element << endl;
+    }
+  }
+}
+
+
 void Game::printAll(){
   printInitial();
   printWinning();
@@ -400,68 +415,109 @@ void Game::printAll(){
 }
 
 
-bool playgame(int relation){
-
-  //Env is player 0
-  //Sys is player 1
+bool Game::reachabilitygame(string relation, int player){
   
-  if (realtion == "leq"){
-    //safety game with all but the upper states. Player 1 must win. 
-    //Equiv to opposite of:: reachability game with upper states as target. Player 0 must win.
-    return not(reachabilitygame(int relation, 0));
+  int opponent = 1 - player;
+  
+  unordered_map<string, vector<string>>* reverse_map = this->getRevTrans();
+  unordered_map<string, vector<string>>* map = this->getTrans();
+  unordered_map<string, int>* statetoplayer = this->getStateToPlayer();
+  unordered_map<string, int>* winning = this->getWinning();
+  
+  string initial = this->getInitial();
+
+  //If Upperbound states are not reachable in the game, i.e. not present in reverse_trans, then player with reachability target cannot win
+  try{
+    reverse_map->at("Upperboundstateplayer0");
   }
-  if (realtion == "lt"){
-    //reachability game with appropriate winning states.
-    //TODO:  change winning states
-    return true;
+  catch(const std::out_of_range){
+    try{
+      reverse_map->at("Upperboundstateplayer1");
+    }
+    catch(const std::out_of_range){
+      cout << "Player cannot win since the initial winning states are not reachable" << endl;
+      return false;
+    }
   }
-}
-
-bool reachabilitygame(int relation, int player){
-
-  int opponent = 1-player;
-  
-  unordered_map<string, vector<string>> reverse_map = self->getRevTrans();
-  unordered_map<string, vector<string>> map = self->getTrans();
-  unordered_map<string, int> statetoplayer = self->getStateToPlayer();
-  unordered_map<string, int> winning = self->getWinning();
-  
-  string initial = self->getInitial();
   
   unordered_map<string, int> numtrans;
   unordered_map<string, vector<string>> :: iterator p;
   for(p = map->begin(); p != map->end(); p++){
     numtrans[p->first] = (p->second).size();
   }
-  
+
+  //Make work queue
   queue<string> statestack;
-  
-  //Special state : init
   statestack.push("Upperboundstateplayer0");
   statestack.push("Upperboundstateplayer1");
-
+  
   vector<string> revtranslist;
   bool playerwins = false;
-  
+
+  this->printRevTrans();
   while(!statestack.empty()){
     string state = statestack.front();
     statestack.pop();
-
-    revtranslist = reverse_map[state];
+    cout << "Current state is " << state << endl;
+    try{
+      revtranslist = reverse_map->at(state);
+    }
+    catch(const std::out_of_range){
+      cout << "Skipping " << state << endl;
+      continue;
+    }
     for(auto & element : revtranslist){
-      if (element == initial){
-	playerwins = true;
-	break;
+      cout << "Exploration in current state is  " << element << endl;
+      int statebelongsto = statetoplayer->at(element);
+      cout << "State belongs to " << statebelongsto << endl;
+
+      if (statebelongsto == player){
+	//there exists state
+	//element is a winning state
+	if (element == initial){
+	    //player has won, since it has arrived at the initial state that it controls
+	    return true;
+	  }
+	//winning[element] = 1;
+	statestack.push(element);
       }
-      if (element = 0){
-      }
-      if (element = 1){
+      else{
+	//statebelongs to opponent
+	//for all state
+	cout << element << " is " << numtrans[element] << endl; 
+	numtrans[element] = numtrans[element]-1;
+	cout << element << " is " << numtrans[element] << endl; 
+	if (numtrans[element] == 0){
+	  if (element == initial){
+	    //since state is winning state
+	    return true;
+	  }
+	  else{
+	    statestack.push(element);
+	  }
+	}
       }
     }
-    if (playerwins == true){
-        return playerwins;
-      }
-    
+  }
+  return false;
+}
+
+
+bool Game::playgame(string relation){
+
+  //Env is player 0
+  //Sys is player 1
+  
+  if (relation == "leq"){
+    //safety game with all but the upper states. Player 1 must win. 
+    //Equiv to opposite of:: reachability game with upper states as target. Player 0 must win.
+    bool ans = reachabilitygame(relation, 0);
+    cout << !(ans) << endl;
+    return !(ans);
+  }
+  if (relation == "lt"){
+    //reachability game with appropriate winning states.
+    //TODO:  change winning states
+    return true;
   }
 }
-  

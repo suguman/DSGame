@@ -20,7 +20,11 @@ int main(int argc, char** argv){
 
   Game* game2 =  new Game(gamegraph, df, value);
 
-  game2->printAll();
+  //game2->printAll();
+
+  bool syswins = game2->playgame("leq");
+
+  cout << "Has system won? " << syswins << endl;
   
   return 0;
 

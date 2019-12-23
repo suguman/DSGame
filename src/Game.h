@@ -22,8 +22,8 @@ class Game{
   virtual ~Game();
 
   //playing game
-  bool playgame(int relation);
-  bool reachabilitygame(int relation, int player);
+  bool playgame(string relation);
+  bool reachabilitygame(string relation, int player);
   
   //Access functions
   string getInitial();
@@ -37,6 +37,7 @@ class Game{
   void printWinning();
   void printStoPlayer();
   void printTrans();
+  void printRevTrans();
   void printAll();
   
   
