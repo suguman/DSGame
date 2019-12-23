@@ -20,7 +20,7 @@ int main(int argc, char** argv){
 
   Game* game2 =  new Game(gamegraph, df, value);
 
-  //game2->printAll();
+  game2->printAll();
   
   return 0;
 

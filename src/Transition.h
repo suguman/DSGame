@@ -19,6 +19,7 @@ class Transition{
 public:
 
   Transition();
+  Transition(int s, int d);
   Transition(int s, int d, int wt);
   ~Transition();
   

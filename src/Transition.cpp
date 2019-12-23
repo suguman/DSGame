@@ -18,6 +18,13 @@ Transition::Transition(){
   wt = 0;
 }
 
+//Unweighted transition
+Transition::Transition(int src, int dest){
+  srcState = src;
+  destState = dest;
+  wt = 0;
+}
+
 Transition::Transition(int src, int dest, int w){
   srcState = src;
   destState = dest;
