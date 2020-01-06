@@ -456,6 +456,8 @@ bool Game::reachabilitygame(string relation, int player){
 
   this->printRevTrans();
   while(!statestack.empty()){
+    
+    cout << "Length of statestack before popping element " << statestack.size() << endl;
     string state = statestack.front();
     statestack.pop();
     cout << "Current state is " << state << endl;
@@ -471,19 +473,40 @@ bool Game::reachabilitygame(string relation, int player){
       int statebelongsto = statetoplayer->at(element);
       cout << "State belongs to " << statebelongsto << endl;
 
+      cout << "State is winning? " << numtrans[element] << endl;
       if (statebelongsto == player){
 	//there exists state
 	//element is a winning state
 	if (element == initial){
 	    //player has won, since it has arrived at the initial state that it controls
 	    return true;
-	  }
-	//winning[element] = 1;
-	statestack.push(element);
+	}
+	if (numtrans[element] != 0){
+	  //element hasn't been visited yet, add it to the stack. A there exists state is visited if its numtrans = 0
+	  // if it has been visited before, numtrans = 0, do nothing
+	  //winning[element] = 1;
+	  statestack.push(element);
+	  numtrans[element] = 0;
+	}
       }
       else{
 	//statebelongs to opponent
 	//for all state
+	if (numtrans[element]!=0){
+	  cout << element << " is " << numtrans[element] << endl; 
+	  numtrans[element] = numtrans[element]-1;
+	  cout << element << " is " << numtrans[element] << endl;
+	  if (numtrans[element] == 0){
+	    //element is  a winning state
+	    if (element == initial){
+	      //game won
+	      return true;
+	    }
+	    //add winning state to stack
+	    statestack.push(element);
+	  }
+	}
+	/*
 	cout << element << " is " << numtrans[element] << endl; 
 	numtrans[element] = numtrans[element]-1;
 	cout << element << " is " << numtrans[element] << endl; 
@@ -492,10 +515,11 @@ bool Game::reachabilitygame(string relation, int player){
 	    //since state is winning state
 	    return true;
 	  }
-	  else{
-	    statestack.push(element);
-	  }
 	}
+	else{
+	  statestack.push(element);
+	}
+	*/
       }
     }
   }
