@@ -13,16 +13,12 @@ int main(int argc, char** argv){
   int value = stoi(argv[3]);
 
   Graph* gamegraph = readGraph(filename);
-  gamegraph->printAll();
-  //gamegraph->printTrans();
+  
+  Game* game =  new Game(gamegraph, df, value);
 
-  Game* game = new Game();
-
-  Game* game2 =  new Game(gamegraph, df, value);
-
-  //game2->printAll();
-
-  bool syswins = game2->playgame("leq");
+  //game->printAll();
+  
+  bool syswins = game->playgame("leq");
 
   cout << "Has system won? " << syswins << endl;
   

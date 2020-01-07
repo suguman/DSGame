@@ -60,7 +60,7 @@ int makelowerbound(int distance, int maxwt, int threshold, int df){
       lowerboundtemp =  -1*float(maxwt)/(df-1);
     }
 
-  cout << lowerboundtemp << " " << floor(lowerboundtemp) << endl;
+  //cout << lowerboundtemp << " " << floor(lowerboundtemp) << endl;
   
   return floor(lowerboundtemp);
 }
@@ -74,7 +74,7 @@ int makeupperbound(int distance, int maxwt, int threshold, int df){
       upperboundtemp = float(maxwt)/(df-1);
     }
 
-  cout << upperboundtemp << " " << floor(upperboundtemp) << endl;
+  //cout << upperboundtemp << " " << floor(upperboundtemp) << endl;
   
   return floor(upperboundtemp);
 }
@@ -171,8 +171,8 @@ Game::Game(Graph* gg, int df, int value){
   while(!statestack.empty()){
     string state = statestack.front();
     statestack.pop();
-    cout << "State being explored is " << state << endl;
-    cout << "State belongs to player " << statetoplayeraux[state] << endl;
+    //cout << "State being explored is " << state << endl;
+    //cout << "State belongs to player " << statetoplayeraux[state] << endl;
 
     
     //Used to store all outgoing neighbours
@@ -188,13 +188,13 @@ Game::Game(Graph* gg, int df, int value){
     int cur_state = stoi(statetemp[0]);
     int cur_comparator  = stoi(statetemp[1]);
     int distance = stoi(statetemp[2]);
-    cout << cur_state << " " << cur_comparator << " " << distance << endl;
+    //cout << cur_state << " " << cur_comparator << " " << distance << endl;
 
     vector<Transition*> translist = transF->at(cur_state);
     
     for(auto &trans : translist){
 
-      trans->toString();
+      //trans->toString();
 
       //*****Begin: Make new state*****//
       // (a). Find the next state in the graph
@@ -248,7 +248,7 @@ Game::Game(Graph* gg, int df, int value){
       
       string new_state = makenewstate(statePlayerID->at(next_src) , upperboundstateflag, lowerboundstateflag, next_src, next_comparator, next_distance);
       
-      cout << "The new state is " << new_state << endl;
+      //cout << "The new state is " << new_state << endl;
 
       //TODO:: Make sure that special states are not entered more than once
       if (upperboundstateflag or lowerboundstateflag){
@@ -298,9 +298,9 @@ Game::Game(Graph* gg, int df, int value){
 	statetoplayeraux[new_state] = statePlayerID->at(next_src);
 	winningaux[new_state] = 0;
 	
-	cout << "Length of statestack before insertion is " << statestack.size() << endl;
+	//cout << "Length of statestack before insertion is " << statestack.size() << endl;
 	statestack.push(new_state);
-	cout << "Length of statestack after insertion is " << statestack.size() << endl;
+	//cout << "Length of statestack after insertion is " << statestack.size() << endl;
       }
     }
     
@@ -355,7 +355,7 @@ unordered_map<string, vector<string>>* Game::getRevTrans(){
 }
 
 void Game::printInitial(){
-  cout << "Initial state is " << this->getInitial() << endl;
+  //cout << "Initial state is " << this->getInitial() << endl;
 }
 
 void Game::printWinning(){
@@ -435,7 +435,7 @@ bool Game::reachabilitygame(string relation, int player){
       reverse_map->at("Upperboundstateplayer1");
     }
     catch(const std::out_of_range){
-      cout << "Player cannot win since the initial winning states are not reachable" << endl;
+      //cout << "Player cannot win since the initial winning states are not reachable" << endl;
       return false;
     }
   }
@@ -454,26 +454,26 @@ bool Game::reachabilitygame(string relation, int player){
   vector<string> revtranslist;
   bool playerwins = false;
 
-  this->printRevTrans();
+  //this->printRevTrans();
   while(!statestack.empty()){
     
-    cout << "Length of statestack before popping element " << statestack.size() << endl;
+    //cout << "Length of statestack before popping element " << statestack.size() << endl;
     string state = statestack.front();
     statestack.pop();
-    cout << "Current state is " << state << endl;
+    //cout << "Current state is " << state << endl;
     try{
       revtranslist = reverse_map->at(state);
     }
     catch(const std::out_of_range){
-      cout << "Skipping " << state << endl;
+      //cout << "Skipping " << state << endl;
       continue;
     }
     for(auto & element : revtranslist){
-      cout << "Exploration in current state is  " << element << endl;
+      //cout << "Exploration in current state is  " << element << endl;
       int statebelongsto = statetoplayer->at(element);
-      cout << "State belongs to " << statebelongsto << endl;
+      //cout << "State belongs to " << statebelongsto << endl;
 
-      cout << "State is winning? " << numtrans[element] << endl;
+      //cout << "State is winning? " << numtrans[element] << endl;
       if (statebelongsto == player){
 	//there exists state
 	//element is a winning state
@@ -493,9 +493,9 @@ bool Game::reachabilitygame(string relation, int player){
 	//statebelongs to opponent
 	//for all state
 	if (numtrans[element]!=0){
-	  cout << element << " is " << numtrans[element] << endl; 
+	  //cout << element << " is " << numtrans[element] << endl; 
 	  numtrans[element] = numtrans[element]-1;
-	  cout << element << " is " << numtrans[element] << endl;
+	  //cout << element << " is " << numtrans[element] << endl;
 	  if (numtrans[element] == 0){
 	    //element is  a winning state
 	    if (element == initial){
@@ -506,20 +506,7 @@ bool Game::reachabilitygame(string relation, int player){
 	    statestack.push(element);
 	  }
 	}
-	/*
-	cout << element << " is " << numtrans[element] << endl; 
-	numtrans[element] = numtrans[element]-1;
-	cout << element << " is " << numtrans[element] << endl; 
-	if (numtrans[element] == 0){
-	  if (element == initial){
-	    //since state is winning state
-	    return true;
-	  }
-	}
-	else{
-	  statestack.push(element);
-	}
-	*/
+	
       }
     }
   }
@@ -536,7 +523,7 @@ bool Game::playgame(string relation){
     //safety game with all but the upper states. Player 1 must win. 
     //Equiv to opposite of:: reachability game with upper states as target. Player 0 must win.
     bool ans = reachabilitygame(relation, 0);
-    cout << !(ans) << endl;
+    //cout << !(ans) << endl;
     return !(ans);
   }
   if (relation == "lt"){
