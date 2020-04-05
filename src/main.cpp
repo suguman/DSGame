@@ -11,10 +11,11 @@ int main(int argc, char** argv){
   string filename = argv[1];
   int df = stoi(argv[2]);
   int value = stoi(argv[3]);
+  int value2 = stoi(argv[4]);
 
   Graph* gamegraph = readGraph(filename);
   
-  Game* game =  new Game(gamegraph, df, value);
+  Game* game =  new Game(gamegraph, df, value, value2);
 
   //game->printAll();
   

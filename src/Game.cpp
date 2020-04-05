@@ -51,13 +51,13 @@ string makenewstate(int playerID, bool isupper, bool islower, int graphstateID, 
   //THROW EXCEPTION
 }
 
-int makelowerbound(int distance, int maxwt, int threshold, int df){
+int makelowerbound(int distance, int maxwt, int threshold, int threshold1, int df){
   float lowerboundtemp=0;
   if (distance == 0){
-      lowerboundtemp = (float(threshold)/df) - float(maxwt)/(df-1);
+    lowerboundtemp = (float(threshold)/df) + (float(threshold1)/df*(df-1)) - float(maxwt)/(df-1);
     }
   if (distance == 1){
-      lowerboundtemp =  -1*float(maxwt)/(df-1);
+      lowerboundtemp =  (float(threshold1)/(df-1)) + -1*float(maxwt)/(df-1);
     }
 
   //cout << lowerboundtemp << " " << floor(lowerboundtemp) << endl;
@@ -65,13 +65,13 @@ int makelowerbound(int distance, int maxwt, int threshold, int df){
   return floor(lowerboundtemp);
 }
 
-int makeupperbound(int distance, int maxwt, int threshold, int df){
+int makeupperbound(int distance, int maxwt, int threshold, int threshold1, int df){
   float upperboundtemp=0;
   if (distance == 0){
-      upperboundtemp = (float(threshold)/df) + float(maxwt)/(df-1);
+      upperboundtemp = (float(threshold)/df) + (float(threshold1)/df*(df-1)) + float(maxwt)/(df-1);
     }
   if (distance == 1){
-      upperboundtemp = float(maxwt)/(df-1);
+      upperboundtemp = (float(threshold1)/(df-1)) + float(maxwt)/(df-1);
     }
 
   //cout << upperboundtemp << " " << floor(upperboundtemp) << endl;
@@ -88,7 +88,7 @@ Game::Game(){
   this->reverseFunc = {};
 }
 
-Game::Game(Graph* gg, int df, int value){
+Game::Game(Graph* gg, int df, int value, int value2){
 
   // Initally winning states are set to the upperboundstates
   
@@ -113,13 +113,14 @@ Game::Game(Graph* gg, int df, int value){
   //Comparator state bounds (Currently we assume that the value is v.0)
 
   int maxWt = gg->getWt();
+  //int maxWttemp2 = max(maxWttemp, abs(value2)]);
   
   //distance = 0
-  int lowerbound0 = makelowerbound(0, maxWt, value, df);
-  int upperbound0 = makeupperbound(0, maxWt, value, df);
+  int lowerbound0 = makelowerbound(0, maxWt, value, value2, df);
+  int upperbound0 = makeupperbound(0, maxWt, value, value2, df);
   //distance = 1
-  int lowerbound1 = makelowerbound(1, maxWt, value, df);
-  int upperbound1 = makeupperbound(1, maxWt, value, df);
+  int lowerbound1 = makelowerbound(1, maxWt, value, value2, df);
+  int upperbound1 = makeupperbound(1, maxWt, value, value2, df);
 
   //*****End: Get the bounds for comparator autoamta*****//
 
@@ -228,7 +229,7 @@ Game::Game(Graph* gg, int df, int value){
 	}
       }
       else{//distance == 1
-	next_comparator_temp = df*cur_comparator + wt;
+	next_comparator_temp = df*cur_comparator + wt - value2;
 	if (next_comparator_temp > upperbound1){
 	  upperboundstateflag = true;
 	}
